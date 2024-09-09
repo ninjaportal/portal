@@ -1,12 +1,12 @@
 <?php
 
-namespace NinjaPortal\NinjaPortal\Services;
+namespace NinjaPortal\Portal\Services;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
-use NinjaPortal\NinjaPortal\Models\Setting;
+use NinjaPortal\Portal\Models\Setting;
 
 class SettingService
 {

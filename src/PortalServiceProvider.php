@@ -3,7 +3,7 @@
 namespace NinjaPortal\Portal;
 
 use Illuminate\Support\Facades\Log;
-use NinjaPortal\NinjaPortal\Services\SettingService;
+use NinjaPortal\Portal\Services\SettingService;
 use NinjaPortal\Portal\Translatable\Locales;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
