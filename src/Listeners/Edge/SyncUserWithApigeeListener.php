@@ -61,21 +61,23 @@ class SyncUserWithApigeeListener
     {
         try {
             $email = $user->email;
-            $existingUser = LaraApigee::edge()->developers()->find($email);
 
-            if ($existingUser) {
-                LaraApigee::edge()->developers()->update($email, $apigeeUser);
-                LaraApigee::edge()->developers()->setStatus($email, $apigeeUser->getStatus());
-                if (!$user->apigee_id) {
-                    $user->update(['apigee_id' => $existingUser->getDeveloperId()]);
+            try {
+                $existingUser = LaraApigee::edge()->developers()->find($email);
+                if ($existingUser) {
+                    LaraApigee::edge()->developers()->update($email, $apigeeUser);
+                    LaraApigee::edge()->developers()->setStatus($email, $apigeeUser->getStatus());
+                    if (!$user->apigee_id) {
+                        $user->update(['apigee_id' => $existingUser->getDeveloperId()]);
+                    }
+                    return 'update';
                 }
-                return 'update';
+            } catch (\Exception $e) {
+                /** @var Developer $newApigeeUser */
+                $newApigeeUser = LaraApigee::edge()->developers()->create($apigeeUser);
+                $user->update(['apigee_id' => $newApigeeUser->getDeveloperId()]);
+                return 'create';
             }
-
-            /** @var Developer $newApigeeUser */
-            $newApigeeUser = LaraApigee::edge()->developers()->create($apigeeUser);
-            $user->update(['apigee_id' => $newApigeeUser->getDeveloperId()]);
-            return 'create';
         } catch (\Exception $e) {
             Log::error('Error syncing user with Apigee', ['email' => $email, 'error' => $e->getMessage()]);
             return 'error';

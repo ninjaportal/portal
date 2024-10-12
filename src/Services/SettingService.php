@@ -8,67 +8,46 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use NinjaPortal\Portal\Models\Setting;
 
-class SettingService
+class SettingService implements IService
 {
-    protected static function getCacheKey(string $key): string
-    {
-        return Config::get('c') . ".{$key}";
-    }
-
-    protected static function isCachable(): bool
-    {
-        return Config::get('ninjaadmin.settings.cachable', false);
-    }
-
-    protected static function getTtl(): int
-    {
-        return Config::get('ninjaadmin.settings.ttl', 3600);
-    }
-
-    protected static function setConfig(string $key, string $value, string $type): void
-    {
-        if ($type === 'integer') {
-            Config::set($key, (int)$value);
-        } elseif ($type === 'boolean') {
-            Config::set($key, $value === 'true');
-        } else {
-            Config::set($key, $value);
-        }
-    }
-
     public static function loadAllSettings(): void
     {
-        $settings = Setting::all();
-        foreach ($settings as $setting) {
-            self::setConfig($setting->key, $setting->value, $setting->type);
+        if (!self::isCachable()) {
+            self::loadSettingsFromDatabase();
+            return;
         }
+
+        $settings = Cache::get(self::getCacheKey());
+
+        if (!$settings) {
+            $settings = Setting::all()->keyBy('key');
+            Cache::put(self::getCacheKey(), $settings, self::getTtl());
+        }
+
+        $settings->each(fn($setting) => self::setConfig($setting->key, $setting->value, $setting->type));
     }
 
     public static function get(string $key): ?string
     {
         if (self::isCachable()) {
-            $cacheKey = self::getCacheKey($key);
-            return Cache::remember($cacheKey, self::getTtl(), function () use ($key) {
-                $setting = Setting::where('key', $key);
-                return [
-                    'value' => $setting->value,
-                    'type' => $setting->type
-                ];
-            });
+            $cachedSettings = Cache::get(self::getCacheKey(), []);
+            $setting = $cachedSettings[$key] ?? self::fetchSettingFromDatabase($key);
+
+            return $setting ? self::castConfigValue($setting['value'], $setting['type']) : null;
         }
-        return Setting::where('key', $key)->value('value');
+
+        $setting = Setting::where('key', $key)->first();
+        return $setting ? self::castConfigValue($setting->value, $setting->type) : null;
     }
 
     public static function set(string $key, string $value, string $type): void
     {
         Setting::updateOrCreate(['key' => $key], ['value' => $value, 'type' => $type]);
+
         if (self::isCachable()) {
-            Cache::put(self::getCacheKey($key),
-                [
-                    'value' => $value,
-                    'type' => $type
-                ]
-                , self::getTtl());
+            $settings = Cache::get(self::getCacheKey(), []);
+            $settings[$key] = compact('value', 'type');
+            Cache::put(self::getCacheKey(), $settings, self::getTtl());
         }
     }
 
@@ -78,7 +57,9 @@ class SettingService
         Config::set($key, null);
 
         if (self::isCachable()) {
-            Cache::forget(self::getCacheKey($key));
+            $settings = Cache::get(self::getCacheKey(), []);
+            unset($settings[$key]);
+            Cache::put(self::getCacheKey(), $settings, self::getTtl());
         }
     }
 
@@ -92,4 +73,52 @@ class SettingService
         return Setting::query();
     }
 
+    protected static function getCacheKey(): string
+    {
+        return Config::get('ninjaportal.settings.cache.cache_key', 'portal_settings');
+    }
+
+    protected static function isCachable(): bool
+    {
+        return Config::get('ninjaportal.settings.cache.enabled', false);
+    }
+
+    protected static function getTtl(): int
+    {
+        return Config::get('ninjaportal.settings.cache.ttl', 3600);
+    }
+
+    protected static function setConfig(string $key, ?string $value, string $type): void
+    {
+        if (!is_null($value)) {
+            Config::set($key, self::castConfigValue($value, $type));
+        }
+    }
+
+    private static function castConfigValue(string $value, string $type): mixed
+    {
+        return match ($type) {
+            'integer' => (int) $value,
+            'boolean' => $value === 'true',
+            'json' => json_decode($value, true),
+            'float' => (float) $value,
+            default => $value,
+        };
+    }
+
+    private static function fetchSettingFromDatabase(string $key): ?array
+    {
+        $setting = Setting::where('key', $key)->first();
+        if ($setting && self::isCachable()) {
+            $cachedSettings = Cache::get(self::getCacheKey(), []);
+            $cachedSettings[$key] = $setting;
+            Cache::put(self::getCacheKey(), $cachedSettings, self::getTtl());
+        }
+        return $setting ? ['value' => $setting->value, 'type' => $setting->type] : null;
+    }
+
+    private static function loadSettingsFromDatabase(): void
+    {
+        Setting::all()->each(fn($setting) => self::setConfig($setting->key, $setting->value, $setting->type));
+    }
 }

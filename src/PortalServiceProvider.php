@@ -2,11 +2,15 @@
 
 namespace NinjaPortal\Portal;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use NinjaPortal\Portal\Commands\InstallCommand;
+use NinjaPortal\Portal\Policies\RolePolicy;
 use NinjaPortal\Portal\Services\SettingService;
 use NinjaPortal\Portal\Translatable\Locales;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Spatie\Permission\Models\Role;
 
 class PortalServiceProvider extends PackageServiceProvider
 {
@@ -15,6 +19,9 @@ class PortalServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('ninjaportal')
+            ->hasCommands([
+                InstallCommand::class
+            ])
             ->hasConfigFile();
     }
 
@@ -39,11 +46,18 @@ class PortalServiceProvider extends PackageServiceProvider
 
     public function packageBooted()
     {
+
+        // Load settings
         try {
             SettingService::loadAllSettings();
         } catch (\Exception $e) {
             Log::error("Failed to load settings: {$e->getMessage()}");
         }
+
+        // Register Role Policy
+        Gate::policy(Role::class, RolePolicy::class);
+
+
     }
 
 }

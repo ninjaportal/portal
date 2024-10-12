@@ -13,4 +13,12 @@ return [
         'translation_suffix' => 'Translation',
         'translation_model_namespace' => null,
     ],
+
+    'settings' => [
+        'cache' => [
+            'ttl' => 60 * 60,
+            'enabled' => true,
+            'key' => 'portal.settings',
+        ],
+    ],
 ];
