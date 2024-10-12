@@ -15,11 +15,12 @@ class User extends Authenticatable
 
     static string $ACTIVE_STATUS = 'active';
     static string $INACTIVE_STATUS = 'inactive';
-    static string $DEFAULT_STATUS = 'active';
+    static string $DEFAULT_STATUS = 'pending';
 
     static array $USER_STATUS = [
         'active' => 'active',
-        'inactive' => 'inactive'
+        'inactive' => 'inactive',
+        'pending' => 'pending'
     ];
 
     protected $fillable = [
