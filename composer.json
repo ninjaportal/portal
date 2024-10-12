@@ -21,7 +21,7 @@
         "spatie/laravel-package-tools": "^1.16.3",
         "illuminate/contracts": "^11.0",
         "guzzlehttp/guzzle": "^7.2",
-        "nesbot/carbon": "^2.0",
+        "nesbot/carbon": "^3.0",
         "spatie/laravel-permission": "^6.9",
         "lordjoo/laraapigee": "v0.2.0"
     },
