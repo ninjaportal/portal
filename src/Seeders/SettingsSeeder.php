@@ -43,7 +43,7 @@ class SettingsSeeder extends Seeder
         ];
 
         foreach ($settings as $group => $groupSettings) {
-            $settingGroup = SettingGroup::create([
+            $settingGroup = SettingGroup::updateOrCreate([
                 'name' => $group,
             ]);
             foreach ($groupSettings as $setting) {

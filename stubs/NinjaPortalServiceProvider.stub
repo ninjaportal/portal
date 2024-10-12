@@ -1,14 +1,13 @@
 <?php
 
-namespace NinjaPortal\Portal\Providers;
+namespace App\Providers;
 
-use Illuminate\Foundation\Support\Providers\EventServiceProvider;
-use NinjaPortal\Portal\Models;
-use NinjaPortal\Portal\Observers;
+
+use NinjaPortal\Portal\Providers\BasePortalServiceProvider as Provider;
 use NinjaPortal\Portal\Events;
 use NinjaPortal\Portal\Listeners;
 
-class NinjaPortalServiceProvider extends EventServiceProvider
+class NinjaPortalServiceProvider extends Provider
 {
 
     /**

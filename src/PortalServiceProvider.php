@@ -28,7 +28,7 @@ class PortalServiceProvider extends PackageServiceProvider
     public function packageRegistered()
     {
         $this->publishes([
-            __DIR__.'/Providers/NinjaPortalServiceProvider.php' => app_path('Providers/NinjaPortalServiceProvider.php'),
+            __DIR__ . '/Providers/BasePortalServiceProvider.php' => app_path('Providers/NinjaPortalServiceProvider.php'),
         ], 'ninjaportal-provider');
 
         $this->publishes([
