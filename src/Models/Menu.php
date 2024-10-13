@@ -3,25 +3,27 @@
 namespace NinjaPortal\Portal\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use NinjaPortal\Portal\Translatable\HasTranslations;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Menu extends Model
 {
-    use HasTranslations;
 
     protected $fillable = [
-        'slug',
-        'name'
+        'slug'
     ];
 
-    public $translated_attributes = [
-        'content',
+    protected $relationships = [
+        'items'
     ];
 
-
-    public static function name($name): Menu|null
+    public static function slug($slug): Menu|null
     {
-        return self::where('name', $name)->first();
+        return self::where('slug', $slug)->first();
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(MenuItem::class);
     }
 
 }

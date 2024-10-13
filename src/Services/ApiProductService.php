@@ -32,7 +32,7 @@ class ApiProductService extends BaseService
     protected function getUserAudience()
     {
         $user = auth()->user();
-        return $user->audiences;
+        return $user->audiences ?? collect();
     }
 
     public function apigeeProducts(): array

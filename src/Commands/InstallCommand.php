@@ -9,7 +9,7 @@ use NinjaPortal\Portal\PortalServiceProvider;
 
 class InstallCommand extends Command
 {
-    protected $signature = 'poral:install';
+    protected $signature = 'portal:install';
 
     protected $description = 'Install the portal';
 

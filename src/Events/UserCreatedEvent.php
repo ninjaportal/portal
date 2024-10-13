@@ -4,7 +4,6 @@ namespace NinjaPortal\Portal\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use NinjaPortal\Portal\Models\User;
 
 class UserCreatedEvent

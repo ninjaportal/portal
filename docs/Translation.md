@@ -92,3 +92,17 @@ $category->setLocale('ar');
 echo $category->name; // اسم القسم  
 ```
 
+## Available methods
+When applying the ```HasTranslations``` trait to a model, the following methods will be available:
+
+```php
+
+Category::whereTranslation(string $translationField, $value, ?string $locale = null)
+Category::whereTranslationLike(string $translationField, $value, ?string $locale = null)
+Category::orWhereTranslation(string $translationField, $value, ?string $locale = null)
+Category::orWhereTranslationLike(string $translationField, $value, ?string $locale = null)
+Category::ListsTranslations(string $translationField)
+Category::notTranslatedIn(?string $locale = null)
+
+
+```
