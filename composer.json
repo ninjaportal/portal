@@ -23,7 +23,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "nesbot/carbon": "^3.0",
         "spatie/laravel-permission": "^6.9",
-        "lordjoo/laraapigee": "v0.2.0"
+        "lordjoo/laraapigee": "v0.2"
     },
     "require-dev": {
 
