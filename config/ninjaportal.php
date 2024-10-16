@@ -21,4 +21,10 @@ return [
             'key' => 'portal.settings',
         ],
     ],
+
+    
+    'translations' => [
+        'fallback_locale' => 'en',
+        'with_fallback' => true,
+    ]
 ];
