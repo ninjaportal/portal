@@ -6,8 +6,9 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use NinjaPortal\Portal\Contracts\Services\ServiceInterface;
 
-abstract class BaseService implements IService
+abstract class BaseService implements ServiceInterface
 {
 
     use Traits\ServiceHooksAwareTrait;
@@ -80,12 +81,13 @@ abstract class BaseService implements IService
 
     public function query(): Builder
     {
-        return (new ($this->getModel()))->newQuery();
+        return static::getModel()::query();
     }
 
-    protected function getModel(): string
+    public static function getModel(): string
     {
-        return static::$model;
+        return static::$model ?? (string) str(class_basename(static::class))
+            ->beforeLast("Service")->plural('App\\Models\\');
     }
 
     protected function mutateDataBeforeUpdate(array $data): array

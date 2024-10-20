@@ -2,11 +2,14 @@
 
 namespace NinjaPortal\Portal\Services;
 
+use Exception;
+use Lordjoo\LaraApigee\Contracts\Services\DeveloperAppCredentialsServiceInterface;
+use NinjaPortal\Portal\Contracts\Services\ServiceInterface;
+use NinjaPortal\Portal\Utils;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
-class UserAppCredentialService implements IService
+class UserAppCredentialService implements ServiceInterface
 {
-    use Traits\InteractsWithApigeeClient;
     use Traits\ServiceHooksAwareTrait;
     use Traits\FireEventsTrait;
 
@@ -26,7 +29,7 @@ class UserAppCredentialService implements IService
 
     public function create(array $apiProducts, ?int $expiresIn = null): void
     {
-        $this->api()->generate($apiProducts,$expiresIn ?? '-1');
+        $this->api()->generate($apiProducts, $expiresIn ?? '-1');
         $this->fireEvent('created', [$this->email, $this->app_name]);
     }
 
@@ -49,9 +52,12 @@ class UserAppCredentialService implements IService
     }
 
 
-    protected function api()
+    /**
+     * @throws Exception
+     */
+    protected function api(): DeveloperAppCredentialsServiceInterface
     {
-        return $this->getClient()->developerAppCredentials($this->email, $this->app_name);
+        return Utils::getApigeeClient()->developerAppCredentials($this->email, $this->app_name);
     }
 
     /**
@@ -77,7 +83,7 @@ class UserAppCredentialService implements IService
      */
     public function approveApiProduct($key, string $api_product): void
     {
-        $this->api()->setApiProductStatus($key, $api_product,'approve');
+        $this->api()->setApiProductStatus($key, $api_product, 'approve');
         $this->fireEvent('productApproved', [$this->email, $this->app_name, $api_product]);
     }
 
@@ -86,13 +92,12 @@ class UserAppCredentialService implements IService
      */
     public function revokeApiProduct($key, string $api_product): void
     {
-        $this->api()->setApiProductStatus($key, $api_product,'revoke');
+        $this->api()->setApiProductStatus($key, $api_product, 'revoke');
         $this->fireEvent('productRevoked', [$this->email, $this->app_name, $api_product]);
     }
 
 
-
-    protected function getModel(): string
+    public static function getModel(): string
     {
         return 'UserAppCredential';
     }

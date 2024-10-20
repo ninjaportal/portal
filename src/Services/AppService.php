@@ -3,19 +3,18 @@
 namespace NinjaPortal\Portal\Services;
 
 use Lordjoo\LaraApigee\Api\ApigeeX\Entities\DeveloperApp as ApigeeXDeveloperApp;
-use Lordjoo\LaraApigee\Api\ApigeeX\Services\DeveloperAppService as ApigeeXDeveloperAppService;
 use Lordjoo\LaraApigee\Api\Edge\Entities\App;
-use Lordjoo\LaraApigee\Api\Edge\Services\DeveloperAppService as EdgeDeveloperAppService;
 use Lordjoo\LaraApigee\Api\Edge\Entities\DeveloperApp as EdgeDeveloperApp;
 use Lordjoo\LaraApigee\Entities\EntityInterface;
-use Lordjoo\LaraApigee\Entities\Structure\AttributesProperty;
+use NinjaPortal\Portal\Contracts\Services\ServiceInterface;
 use NinjaPortal\Portal\Services\Traits\InteractsWithApigeeClient;
+use Lordjoo\LaraApigee\Contracts\Services\AppServiceInterface;
+use NinjaPortal\Portal\Utils;
 
 
-class AppService implements IService
+class AppService implements ServiceInterface
 {
 
-    use InteractsWithApigeeClient;
     use Traits\ServiceHooksAwareTrait;
     use Traits\FireEventsTrait;
 
@@ -54,16 +53,6 @@ class AppService implements IService
     {
         $this->callHook('beforeUpdate', [$data]);
 
-//        if (isset($data['attributes']) && is_array($data['attributes'])) {
-//            $attributes = new AttributesProperty();
-//            foreach ($data['attributes'] as $attribute) {
-//                if (!isset($attribute['name']) || !isset($attribute['value'])) {
-//                    throw new \InvalidArgumentException('Attributes must have name and value');
-//                }
-//                $attributes->add($attribute['name'], $attribute['value']);
-//            }
-//            $data['attributes'] = $attributes;
-//        }
 
         $developerAppEntity =
             $this->getPlatform() === 'edge' ? new EdgeDeveloperApp($data) :
@@ -96,18 +85,18 @@ class AppService implements IService
 
     protected function getEntity(array $data): ?EntityInterface
     {
-        return $this->getPlatform() === 'edge' ? new EdgeDeveloperApp($data) :
-            ($this->getPlatform() === 'apigeex' ? new ApigeeXDeveloperApp($data) : null);
+        return Utils::getPlatform() === 'edge' ? new EdgeDeveloperApp($data) :
+            (Utils::getPlatform() === 'apigee' ? new ApigeeXDeveloperApp($data) : null);
     }
 
-    protected function getModel(): string
+    public static function getModel(): string
     {
         return "UserApp";
     }
 
-    protected function api(): \Lordjoo\LaraApigee\Services\BaseService
+    protected function api(): AppServiceInterface
     {
-        return $this->getClient()->apps();
+        return Utils::getApigeeClient()->apps();
     }
 
 

@@ -2,9 +2,13 @@
 
 namespace NinjaPortal\Portal\Services;
 
-use NinjaPortal\Portal\Models\Menu;
+use NinjaPortal\Portal\Contracts\Services\MenuServiceInterface;
+use NinjaPortal\Portal\Utils;
 
-class MenuService extends BaseService
+class MenuService extends BaseService implements MenuServiceInterface
 {
-    protected static string $model = Menu::class;
+    public static function getModel(): string
+    {
+        return Utils::getMenuModel();
+    }
 }

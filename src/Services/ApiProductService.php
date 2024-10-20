@@ -3,11 +3,11 @@
 namespace NinjaPortal\Portal\Services;
 
 use Lordjoo\LaraApigee\Facades\LaraApigee;
-use NinjaPortal\Portal\Models\ApiProduct;
+use NinjaPortal\Portal\Contracts\Services\ApiProductServiceInterface;
+use NinjaPortal\Portal\Utils;
 
-class ApiProductService extends BaseService
+class ApiProductService extends BaseService implements ApiProductServiceInterface
 {
-    protected static string $model = ApiProduct::class;
 
     public function public()
     {
@@ -37,8 +37,13 @@ class ApiProductService extends BaseService
 
     public function apigeeProducts(): array
     {
-        return LaraApigee::platform(config('ninjaportal.apigee_platform'))->apiProducts()->get();
+        return Utils::getApigeeClient()->apiProducts()->get();
     }
 
+
+    public static function getModel(): string
+    {
+        return Utils::getApiProductModel();
+    }
 
 }
