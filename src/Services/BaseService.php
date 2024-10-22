@@ -6,11 +6,13 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Traits\Macroable;
 use NinjaPortal\Portal\Contracts\Services\ServiceInterface;
 
 abstract class BaseService implements ServiceInterface
 {
 
+    use Macroable;
     use Traits\ServiceHooksAwareTrait;
     use Traits\FireEventsTrait;
 

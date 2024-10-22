@@ -126,7 +126,7 @@ class Utils
         $platform = self::getPlatform();
         if ($platform === 'edge') {
             return LaraApigee::edge();
-        } elseif ($platform === 'apigee') {
+        } elseif ($platform === 'apigeex') {
             return LaraApigee::apigeex();
         }
 

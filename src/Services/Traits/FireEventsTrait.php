@@ -12,6 +12,7 @@ trait FireEventsTrait
         array  $eventParams = []
     ): void
     {
+        // TODO Priotrise App Events for overriden events
         $modelName = class_basename(static::getModel()) . ucfirst($action) . "Event";
         $namespace = "NinjaPortal\Portal\Events";
         $event = $namespace . "\\" . $modelName;

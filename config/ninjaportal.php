@@ -4,8 +4,8 @@ return [
 
     /*
      * the type of the platform
-     * either "edge" or "apigee" are supported
-     * apigee is used for ApigeeX
+     * either "edge" or "apigeex" are supported
+     * apigeex is used for ApigeeX
      *
      * this is used to determine the type of the platform
      */
