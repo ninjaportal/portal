@@ -21,4 +21,12 @@ return [
             'key' => 'portal.settings',
         ],
     ],
+
+    /**
+     * Locales ex: ['en' => "English", 'ar' => "Arabic"]
+     */
+    "locales" => [
+        'en' => "English",
+        'ar' => "Arabic",
+    ]
 ];
