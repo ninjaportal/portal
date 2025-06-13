@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->string('password');
             $table->string('status')->default(User::$ACTIVE_STATUS);
-            $table->string('apigee_id')->nullable();
+            $table->boolean('sync_with_apigee')->default(false);
             $table->json("custom_attributes")->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();

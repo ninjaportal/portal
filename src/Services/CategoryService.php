@@ -2,9 +2,13 @@
 
 namespace NinjaPortal\Portal\Services;
 
-use NinjaPortal\Portal\Models\Category;
+use NinjaPortal\Portal\Contracts\Services\CategoryServiceInterface;
+use NinjaPortal\Portal\Utils;
 
-class CategoryService extends BaseService
+class CategoryService extends BaseService implements CategoryServiceInterface
 {
-    static protected string $model = Category::class;
+    public static function getModel(): string
+    {
+        return Utils::getCategoryModel();
+    }
 }

@@ -2,13 +2,15 @@
 
 namespace NinjaPortal\Portal\Services;
 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use NinjaPortal\Portal\Contracts\Services\UserServiceInterface;
 use NinjaPortal\Portal\Events\UserResetPasswordEvent;
 use NinjaPortal\Portal\Models\User;
+use NinjaPortal\Portal\Utils;
 
-class UserService extends BaseService
+class UserService extends BaseService implements UserServiceInterface
 {
-    static protected string $model = User::class;
 
     public function findByEmail(string $email): ?User
     {
@@ -56,15 +58,30 @@ class UserService extends BaseService
         return false;
     }
 
-    public function updatePassword(User $user, array $data): void
+
+    public function updatePassword(User|string|int $user, string $currentPassword, string $password): void
     {
-        if (!auth()->validate([
-            "email" => $user->email,
-            "password" => $data["current_password"],
-        ])) {
-            throw new \Exception("Invalid password");
+        if (is_string($user)) {
+            $user = $this->findByEmail($user);
+        } elseif (is_int($user)) {
+            $user = $this->find($user);
         }
-        $user->password = $data["password"];
+
+        if (!$user) {
+            throw new \Exception("User not found");
+        }
+
+        if (!Hash::check($currentPassword, $user->password)) {
+            throw new \Exception("Current password is incorrect");
+        }
+
+        $user->password = $password;
         $user->save();
+    }
+
+
+    public static function getModel(): string
+    {
+        return Utils::getUserModel();
     }
 }

@@ -30,6 +30,8 @@ trait HasTranslations
 
     protected ?bool $toArrayAlwaysLoadsTranslations = false;
 
+    protected ?bool $useTranslationFallback = true;
+
     public static bool $deleteTranslationsCascade = true;
 
     protected ?Model $translation = null;
@@ -195,7 +197,12 @@ trait HasTranslations
         ) {
             return $this->translation;
         }
+
         $this->translation = $this->translations->firstWhere($this->getLocaleKey(), $locale);
+        if ($this->translation === null && $this->useFallback()) {
+            $this->translation = $this->translations->firstWhere($this->getLocaleKey(), $this->getFallbackLocale());
+        }
+
         return $this->translation;
     }
 
@@ -258,5 +265,15 @@ trait HasTranslations
     public function __isset($key)
     {
         return $this->isTranslatedAttribute($key) || parent::__isset($key);
+    }
+
+    public function getFallbackLocale(): string
+    {
+        return config('ninjaportal.translatable.fallback_locale', 'en');
+    }
+
+    public function useFallback(): bool
+    {
+        return $this->useTranslationFallback ?? config('ninjaportal.translatable.with_fallback', false);
     }
 }

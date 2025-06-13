@@ -32,7 +32,7 @@ class User extends Authenticatable
         'email_verified_at',
         'remember_token',
         'custom_attributes',
-        'apigee_id'
+        'sync_with_apigee'
     ];
 
     protected $hidden = [
@@ -42,7 +42,8 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'custom_attributes' => 'array'
+        'custom_attributes' => 'array',
+        'sync_with_apigee' => 'boolean'
     ];
 
     protected $appends = [

@@ -16,10 +16,10 @@ class NinjaPortalServiceProvider extends Provider
      */
     protected $listen = [
         Events\UserCreatedEvent::class => [
-            Listeners\Edge\SyncUserWithApigeeListener::class,
+            Listeners\SyncUserWithApigeeListener::class,
         ],
         Events\UserUpdatedEvent::class => [
-            Listeners\Edge\SyncUserWithApigeeListener::class,
+            Listeners\SyncUserWithApigeeListener::class,
         ],
     ];
 
