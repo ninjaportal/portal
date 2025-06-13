@@ -20,7 +20,7 @@ class UserAppCredentialService implements UserAppCredentialServiceInterface
      * @param string $key
      * @return mixed
      */
-    public function find(string $email, string $app_name, string $key)
+    public function find(string $email, string $app_name, string $key): mixed
     {
         return $this->api($email, $app_name)->load($key);
     }

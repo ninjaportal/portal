@@ -2,12 +2,18 @@
 
 namespace NinjaPortal\Portal\Services;
 
-use Lordjoo\LaraApigee\Facades\LaraApigee;
+use Illuminate\Support\Collection;
+use Lordjoo\LaraApigee\Api\ApigeeX\Entities\ApiProduct;
 use NinjaPortal\Portal\Contracts\Services\ApiProductServiceInterface;
 use NinjaPortal\Portal\Utils;
 
 class ApiProductService extends BaseService implements ApiProductServiceInterface
 {
+
+    public static function getModel(): string
+    {
+        return Utils::getApiProductModel();
+    }
 
     public function public()
     {
@@ -35,15 +41,14 @@ class ApiProductService extends BaseService implements ApiProductServiceInterfac
         return $user->audiences ?? collect();
     }
 
-    public function apigeeProducts(): array
+    /**
+     * Get the query builder for API products.
+     *
+     * @return Collection<\Lordjoo\LaraApigee\Api\Edge\Entities\ApiProduct>| Collection<ApiProduct>
+     */
+    public function apigeeProducts(): Collection
     {
         return Utils::getApigeeClient()->apiProducts()->get();
-    }
-
-
-    public static function getModel(): string
-    {
-        return Utils::getApiProductModel();
     }
 
 }

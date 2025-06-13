@@ -2,13 +2,15 @@
 
 namespace NinjaPortal\Portal\Services;
 
+use Exception;
+use Illuminate\Support\Collection;
+use Lordjoo\LaraApigee\Api\ApigeeX\Entities\DeveloperApp as ApigeeXDeveloperApp;
+use Lordjoo\LaraApigee\Api\Edge\Entities\DeveloperApp as EdgeDeveloperApp;
+use Lordjoo\LaraApigee\Contracts\Services\DeveloperAppServiceInterface;
 use Lordjoo\LaraApigee\Entities\EntityInterface;
 use NinjaPortal\Portal\Contracts\Services\UserAppServiceInterface;
 use NinjaPortal\Portal\Services\Traits\InteractsWithApigeeClient;
-use Lordjoo\LaraApigee\Contracts\Services\DeveloperAppServiceInterface;
 use NinjaPortal\Portal\Utils;
-use Lordjoo\LaraApigee\Api\ApigeeX\Entities\DeveloperApp as ApigeeXDeveloperApp;
-use Lordjoo\LaraApigee\Api\Edge\Entities\DeveloperApp as EdgeDeveloperApp;
 
 
 class UserAppService implements UserAppServiceInterface
@@ -17,9 +19,31 @@ class UserAppService implements UserAppServiceInterface
     use Traits\ServiceHooksAwareTrait;
     use Traits\FireEventsTrait;
 
-    public function all(string $email): array
+    public static function getModel(): string
+    {
+        return "UserApp";
+    }
+
+    /**
+     * @param string $email
+     * @return Collection<EntityInterface>
+     * @throws Exception
+     */
+    public function all(string $email): Collection
     {
         return $this->api($email)->get();
+    }
+
+    /**
+     * Get the API client for managing developer apps for a specific user.
+     *
+     * @param string $email
+     * @return DeveloperAppServiceInterface
+     * @throws Exception
+     */
+    protected function api(string $email): DeveloperAppServiceInterface
+    {
+        return Utils::getApigeeClient()->developerApps($email);
     }
 
     /**
@@ -27,7 +51,7 @@ class UserAppService implements UserAppServiceInterface
      *
      * @param string $email
      * @param array $data
-     * @return \Lordjoo\LaraApigee\Entities\EntityInterface|null
+     * @return EntityInterface|null
      */
     public function create(string $email, array $data): ?EntityInterface
     {
@@ -47,12 +71,24 @@ class UserAppService implements UserAppServiceInterface
     }
 
     /**
+     * Get the appropriate DeveloperApp entity based on the platform.
+     *
+     * @param array $data
+     * @return EntityInterface|null
+     */
+    protected function getEntity(array $data): ?EntityInterface
+    {
+        return Utils::getPlatform() === 'edge' ? new EdgeDeveloperApp($data) :
+            (Utils::getPlatform() === 'apigeex' ? new ApigeeXDeveloperApp($data) : null);
+    }
+
+    /**
      * Update a developer app for the user.
      *
      * @param string $email
      * @param string $name
      * @param array $data
-     * @return \Lordjoo\LaraApigee\Entities\EntityInterface|null
+     * @return EntityInterface|null
      */
     public function update(string $email, string $name, array $data): ?EntityInterface
     {
@@ -92,39 +128,10 @@ class UserAppService implements UserAppServiceInterface
      *
      * @param string $email
      * @param string $name
-     * @return \Lordjoo\LaraApigee\Entities\EntityInterface|null
+     * @return EntityInterface|null
      */
     public function find(string $email, string $name): ?EntityInterface
     {
         return $this->api($email)->find($name);
-    }
-
-    public static function getModel(): string
-    {
-        return "UserApp";
-    }
-
-    /**
-     * Get the API client for managing developer apps for a specific user.
-     *
-     * @param string $email
-     * @return DeveloperAppServiceInterface
-     * @throws \Exception
-     */
-    protected function api(string $email): DeveloperAppServiceInterface
-    {
-        return Utils::getApigeeClient()->developerApps($email);
-    }
-
-    /**
-     * Get the appropriate DeveloperApp entity based on the platform.
-     *
-     * @param array $data
-     * @return EntityInterface|null
-     */
-    protected function getEntity(array $data): ?EntityInterface
-    {
-        return Utils::getPlatform() === 'edge' ? new EdgeDeveloperApp($data) :
-            (Utils::getPlatform() === 'apigeex' ? new ApigeeXDeveloperApp($data) : null);
     }
 }
