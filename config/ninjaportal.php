@@ -11,38 +11,6 @@ return [
      */
     "apigee_platform" => "edge",
 
-    'translatable' => [
-        /*
-         * The default translation model prefix {ModelName}Translation
-         */
-        'translation_suffix' => 'Translation',
-
-        /*
-         * The default translation model namespace
-         */
-        'translation_model_namespace' => null,
-    ],
-
-    'settings' => [
-        'cache' => [
-            /*
-             * Enable or disable the cache for the settings
-             */
-            'enabled' => true,
-
-            /*
-             * The cache key for the settings
-             */
-            'key' => 'portal.settings',
-
-            /*
-             * The cache ttl for the settings
-             */
-            'ttl' => 60 * 60,
-        ],
-    ],
-
-
     'translations' => [
         /*
          * Enable or disable the fallback locale
@@ -65,7 +33,33 @@ return [
         'Setting' => \NinjaPortal\Portal\Models\Setting::class,
         'SettingGroup' => \NinjaPortal\Portal\Models\SettingGroup::class,
         'User' => \NinjaPortal\Portal\Models\User::class,
-    ]
+    ],
 
+    'settings' => [
+        'cache' => [
+            /*
+             * Enable or disable the cache for the settings
+             */
+            'enabled' => true,
+
+            /*
+             * The cache key for the settings
+             */
+            'key' => 'portal.settings',
+
+            /*
+             * The cache ttl for the settings
+             */
+            'ttl' => 60 * 60,
+        ],
+    ],
+
+    /**
+     * Locales ex: ['en' => "English", 'ar' => "Arabic"]
+     */
+    "locales" => [
+        'en' => "English",
+        'ar' => "Arabic",
+    ]
 
 ];
