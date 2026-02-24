@@ -1,0 +1,66 @@
+{
+    "name": "ninjaportal/portal",
+    "description": "A Laravel Like Apigee DevPortal",
+    "keywords": [
+        "lordjoo",
+        "laravel",
+        "laravel-apigee",
+        "apigee","apigee-php"
+    ],
+    "homepage": "https://github.com/ninjaportal/ninjaportal",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "lordjoo",
+            "email": "youssef.afify122@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "spatie/laravel-package-tools": "^1.16.3",
+        "illuminate/contracts": "^11.0||^12.0",
+        "guzzlehttp/guzzle": "^7.2",
+        "nesbot/carbon": "^3.0",
+        "spatie/laravel-permission": "^6.9",
+        "lordjoo/laraapigee": "^0.2"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.20",
+        "orchestra/testbench": "^9.0||^10.0",
+        "phpstan/phpstan": "^1.12||^2.0",
+        "phpunit/phpunit": "^11.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "NinjaPortal\\Portal\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "NinjaPortal\\Portal\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit -c phpunit.xml.dist",
+        "analyse": "vendor/bin/phpstan analyse -c phpstan.neon.dist",
+        "format": "vendor/bin/pint",
+        "format:test": "vendor/bin/pint --test"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "NinjaPortal\\Portal\\PortalServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
