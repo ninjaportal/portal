@@ -55,7 +55,7 @@ class SettingsSeeder extends Seeder
                     'key' => 'branding.logo_url',
                     'label' => 'Logo',
                     'type' => Constants::SETTING_TYPES['string'],
-                    'value' => 'https://placehold.co/160x40?text=Ninja+Portal',
+                    'value' => 'https://i.ibb.co/m5NYhRp7/ninjaportal-light-png.png',
                 ],
                 [
                     'key' => 'branding.show_logo_text',
@@ -67,7 +67,7 @@ class SettingsSeeder extends Seeder
                     'key' => 'branding.favicon_url',
                     'label' => 'Fav Icon',
                     'type' => Constants::SETTING_TYPES['string'],
-                    'value' => 'https://placehold.co/32x32?text=NP',
+                    'value' => 'https://i.ibb.co/TqvHwmKX/favicon.png',
                 ],
             ],
             'Feature Flags' => [

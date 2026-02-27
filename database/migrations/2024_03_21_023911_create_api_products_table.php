@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('api_products', function (Blueprint $table) {
             $table->id();
             $table->string('slug')->unique();
-            $table->string('apigee_product_id')->unique();
+            $table->string('apigee_product_id')->index();
             $table->string('swagger_url')->nullable();
             $table->string('visibility')->default('public');
             $table->timestamps();

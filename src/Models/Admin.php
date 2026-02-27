@@ -10,6 +10,8 @@ class Admin extends Authenticatable implements JWTSubject
 {
     use HasRoles;
 
+    protected string $guard_name = 'admin';
+
     protected $fillable = [
         'name',
         'email',
