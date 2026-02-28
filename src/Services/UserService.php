@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use NinjaPortal\Portal\Contracts\Repositories\UserRepositoryInterface;
 use NinjaPortal\Portal\Contracts\Services\UserServiceInterface;
+use NinjaPortal\Portal\Events\User\UserAudiencesSyncedEvent;
 use NinjaPortal\Portal\Events\User\UserPasswordResetRequestedEvent;
 use NinjaPortal\Portal\Events\User\UserResetPasswordEvent;
 use NinjaPortal\Portal\Models\User;
@@ -102,5 +103,21 @@ class UserService extends BaseService implements UserServiceInterface
 
         $user->password = $password;
         $user->save();
+    }
+
+    public function syncAudiences(User|string|int $user, array $audienceIds): User
+    {
+        $user = $this->repository()->resolve($user);
+
+        $this->callHook('beforeSyncAudiences', [$user, $audienceIds]);
+
+        $user->audiences()->sync($audienceIds);
+        $user->load('audiences');
+
+        $this->callHook('afterSyncAudiences', [$user, $audienceIds]);
+
+        UserAudiencesSyncedEvent::dispatch($user, $audienceIds);
+
+        return $user;
     }
 }

@@ -32,4 +32,9 @@ interface UserServiceInterface extends ServiceInterface
      * @throws \Exception when the user is not found or the current password is invalid.
      */
     public function updatePassword(User|string|int $user, string $currentPassword, string $password): void;
+
+    /**
+     * @param  array<int, int|string>  $audienceIds
+     */
+    public function syncAudiences(User|string|int $user, array $audienceIds): User;
 }

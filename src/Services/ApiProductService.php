@@ -6,6 +6,9 @@ use Illuminate\Support\Collection;
 use Lordjoo\LaraApigee\Api\ApigeeX\Entities\ApiProduct;
 use NinjaPortal\Portal\Contracts\Repositories\ApiProductRepositoryInterface;
 use NinjaPortal\Portal\Contracts\Services\ApiProductServiceInterface;
+use NinjaPortal\Portal\Events\ApiProduct\ApiProductAudiencesSyncedEvent;
+use NinjaPortal\Portal\Events\ApiProduct\ApiProductCategoriesSyncedEvent;
+use NinjaPortal\Portal\Models\ApiProduct as PortalApiProduct;
 use NinjaPortal\Portal\Services\Traits\CrudOperationsTrait;
 use NinjaPortal\Portal\Utils;
 
@@ -54,5 +57,37 @@ class ApiProductService extends BaseService implements ApiProductServiceInterfac
     public function apigeeProducts(): Collection
     {
         return Utils::getApigeeClient()->apiProducts()->get();
+    }
+
+    public function syncCategories(PortalApiProduct|int|string $apiProduct, array $categoryIds): PortalApiProduct
+    {
+        $apiProduct = $this->repository()->resolve($apiProduct);
+
+        $this->callHook('beforeSyncCategories', [$apiProduct, $categoryIds]);
+
+        $apiProduct->categories()->sync($categoryIds);
+        $apiProduct->load('categories');
+
+        $this->callHook('afterSyncCategories', [$apiProduct, $categoryIds]);
+
+        ApiProductCategoriesSyncedEvent::dispatch($apiProduct, $categoryIds);
+
+        return $apiProduct;
+    }
+
+    public function syncAudiences(PortalApiProduct|int|string $apiProduct, array $audienceIds): PortalApiProduct
+    {
+        $apiProduct = $this->repository()->resolve($apiProduct);
+
+        $this->callHook('beforeSyncAudiences', [$apiProduct, $audienceIds]);
+
+        $apiProduct->audiences()->sync($audienceIds);
+        $apiProduct->load('audiences');
+
+        $this->callHook('afterSyncAudiences', [$apiProduct, $audienceIds]);
+
+        ApiProductAudiencesSyncedEvent::dispatch($apiProduct, $audienceIds);
+
+        return $apiProduct;
     }
 }

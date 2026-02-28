@@ -40,6 +40,12 @@ return [
         'translation_model_namespace' => null,
     ],
 
+    'auth' => [
+        'guards' => [
+            'admin' => env('NINJAPORTAL_ADMIN_GUARD', 'admin'),
+        ],
+    ],
+
     'models' => [
         'Admin' => \NinjaPortal\Portal\Models\Admin::class,
         'ApiProduct' => \NinjaPortal\Portal\Models\ApiProduct::class,
@@ -47,6 +53,8 @@ return [
         'Category' => \NinjaPortal\Portal\Models\Category::class,
         'Menu' => \NinjaPortal\Portal\Models\Menu::class,
         'MenuItem' => \NinjaPortal\Portal\Models\MenuItem::class,
+        'Permission' => \Spatie\Permission\Models\Permission::class,
+        'Role' => \Spatie\Permission\Models\Role::class,
         'Setting' => \NinjaPortal\Portal\Models\Setting::class,
         'SettingGroup' => \NinjaPortal\Portal\Models\SettingGroup::class,
         'User' => \NinjaPortal\Portal\Models\User::class,

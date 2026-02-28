@@ -116,9 +116,10 @@ class RbacSeeder extends Seeder
     {
         $guards = [
             'web',
-            'admin',
+            Utils::getAdminRbacGuard(),
             (string) config('auth.defaults.guard', 'web'),
-            (string) config('portal-api.auth.guards.admin', 'admin'),
+            (string) config('portal-api.auth.guards.admin', Utils::getAdminRbacGuard()),
+            (string) config('portal-admin.panel.rbac_guard', Utils::getAdminRbacGuard()),
         ];
 
         $guards = array_map(
@@ -141,7 +142,7 @@ class RbacSeeder extends Seeder
             return;
         }
 
-        $adminGuard = (string) config('portal-api.auth.guards.admin', 'admin');
+        $adminGuard = (string) config('portal-admin.panel.rbac_guard', config('portal-api.auth.guards.admin', Utils::getAdminRbacGuard()));
         $role = $rolesByGuard[$adminGuard] ?? Role::query()
             ->where('name', 'super_admin')
             ->where('guard_name', $adminGuard)

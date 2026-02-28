@@ -97,7 +97,8 @@ class UserAppService implements UserAppServiceInterface, AppServiceInterface
     {
         $this->callHook('beforeUpdate', [$data]);
 
-        $developerAppEntity = $this->getEntity($data);
+        $existing = $this->find($email, $name);
+        $developerAppEntity = $this->getEntity($this->buildUpdatePayload($name, $data, $existing));
 
         if (! $developerAppEntity) {
             throw new Exception('Unsupported Apigee platform.');
@@ -116,6 +117,88 @@ class UserAppService implements UserAppServiceInterface, AppServiceInterface
         UserAppUpdatedEvent::dispatch($email, $app);
 
         return $app;
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    protected function buildUpdatePayload(string $name, array $data, ?EntityInterface $existing): array
+    {
+        $payload = [
+            'name' => $name,
+            'displayName' => $this->payloadString($data, 'displayName')
+                ?? $this->entityString($existing, 'getDisplayName')
+                ?? $name,
+            'status' => strtolower(
+                $this->payloadString($data, 'status')
+                ?? $this->entityString($existing, 'getStatus')
+                ?? 'approved'
+            ),
+        ];
+
+        if (($apiProducts = $this->payloadArray($data, 'apiProducts')) !== null) {
+            $payload['apiProducts'] = $apiProducts;
+        }
+
+        if (array_key_exists('callbackUrl', $data)) {
+            $payload['callbackUrl'] = $data['callbackUrl'];
+        } elseif ($existing && method_exists($existing, 'getCallbackUrl')) {
+            $payload['callbackUrl'] = $existing->getCallbackUrl();
+        }
+
+        if (array_key_exists('description', $data)) {
+            $payload['description'] = (string) ($data['description'] ?? '');
+        } elseif (($description = $this->entityString($existing, 'getDescription')) !== null) {
+            $payload['description'] = $description;
+        }
+
+        return $payload;
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    protected function payloadString(array $data, string $key): ?string
+    {
+        if (! array_key_exists($key, $data)) {
+            return null;
+        }
+
+        $value = $data[$key];
+
+        if ($value === null) {
+            return null;
+        }
+
+        return is_string($value) ? $value : (string) $value;
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<int, string>|null
+     */
+    protected function payloadArray(array $data, string $key): ?array
+    {
+        if (! array_key_exists($key, $data) || ! is_array($data[$key])) {
+            return null;
+        }
+
+        return array_values(array_filter(array_map(static fn ($value): string => (string) $value, $data[$key])));
+    }
+
+    protected function entityString(?EntityInterface $entity, string $getter): ?string
+    {
+        if (! $entity || ! method_exists($entity, $getter)) {
+            return null;
+        }
+
+        $value = $entity->{$getter}();
+
+        if ($value === null) {
+            return null;
+        }
+
+        return is_string($value) ? $value : (string) $value;
     }
 
     /**

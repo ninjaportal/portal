@@ -80,6 +80,22 @@ class Utils
     }
 
     /**
+     * Get the Role model class.
+     */
+    public static function getRoleModel(): ?string
+    {
+        return self::getModel('Role');
+    }
+
+    /**
+     * Get the Permission model class.
+     */
+    public static function getPermissionModel(): ?string
+    {
+        return self::getModel('Permission');
+    }
+
+    /**
      * Get the Setting model class.
      *
      * @return string|null The Setting model class or null if not found.
@@ -97,6 +113,14 @@ class Utils
     public static function getSettingGroupModel(): ?string
     {
         return self::getModel('SettingGroup');
+    }
+
+    /**
+     * Get the canonical RBAC guard used for admin roles and permissions.
+     */
+    public static function getAdminRbacGuard(): string
+    {
+        return (string) config('ninjaportal.auth.guards.admin', 'admin');
     }
 
     /**

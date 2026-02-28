@@ -18,6 +18,16 @@ class Admin extends Authenticatable implements JWTSubject
         'password',
     ];
 
+    public function guardName(): string
+    {
+        return \NinjaPortal\Portal\Utils::getAdminRbacGuard();
+    }
+
+    protected function getDefaultGuardName(): string
+    {
+        return $this->guardName();
+    }
+
     public function getJWTIdentifier(): mixed
     {
         return $this->getKey();

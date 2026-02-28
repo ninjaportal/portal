@@ -225,7 +225,7 @@ trait HasTranslations
     {
         $locale = $locale ?: $this->getLocale();
 
-        if (($translation = $this->getTranslation($locale)) === null) {
+        if (($translation = $this->findTranslationForLocale($locale)) === null) {
             $translation = $this->getNewTranslation($locale);
         }
 
@@ -492,6 +492,18 @@ trait HasTranslations
         unset($dirtyAttributes[$this->getLocaleKey()]);
 
         return count($dirtyAttributes) > 0;
+    }
+
+    /**
+     * Find a translation for the exact locale without applying fallback logic.
+     */
+    protected function findTranslationForLocale(string $locale): ?Model
+    {
+        if (! $this->relationLoaded('translations')) {
+            $this->load('translations');
+        }
+
+        return $this->translations->firstWhere($this->getLocaleKey(), $locale);
     }
 
     /**
