@@ -47,4 +47,12 @@ class PortalServiceProviderTest extends TestCase
 
         $repository->restore(1);
     }
+
+    public function test_core_models_do_not_expose_jwt_contract_methods(): void
+    {
+        $this->assertFalse(method_exists(new \NinjaPortal\Portal\Models\User, 'getJWTIdentifier'));
+        $this->assertFalse(method_exists(new \NinjaPortal\Portal\Models\User, 'getJWTCustomClaims'));
+        $this->assertFalse(method_exists(new \NinjaPortal\Portal\Models\Admin, 'getJWTIdentifier'));
+        $this->assertFalse(method_exists(new \NinjaPortal\Portal\Models\Admin, 'getJWTCustomClaims'));
+    }
 }
