@@ -17,15 +17,32 @@ return new class extends Migration
         }
 
         Schema::table('users', function (Blueprint $table) {
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('status')->default(User::$ACTIVE_STATUS);
-            $table->boolean('sync_with_apigee')->default(false);
-            $table->json('custom_attributes')->nullable();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->rememberToken();
+            if (! Schema::hasColumn('users', 'first_name'))
+                $table->string('first_name');
+
+            if (! Schema::hasColumn('users', 'last_name'))
+                $table->string('last_name');
+
+            if (! Schema::hasColumn('users', 'email'))
+                $table->string('email')->unique();
+
+            if (! Schema::hasColumn('users', 'password'))
+                $table->string('password');
+
+            if (! Schema::hasColumn('users', 'status'))
+                $table->string('status')->default(User::$ACTIVE_STATUS);
+
+            if (! Schema::hasColumn('users', 'role'))
+                $table->boolean('sync_with_apigee')->default(false);
+
+            if (! Schema::hasColumn('users', 'custom_attributes'))
+                $table->json('custom_attributes')->nullable();
+            if (! Schema::hasColumn('users', 'email_verified_at'))
+                $table->timestamp('email_verified_at')->nullable();
+            if (! Schema::hasColumn('users', 'remember_token'))
+                $table->rememberToken();
+            if (! Schema::hasColumn('users', 'metadata'))
+                $table->json('metadata')->nullable();
         });
 
         if (! Schema::hasTable('password_reset_tokens')) {
