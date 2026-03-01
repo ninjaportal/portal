@@ -9,9 +9,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use NinjaPortal\Portal\Query\Filters\UserFilter;
 use NinjaPortal\Portal\Query\Search\UserSearch;
-use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
@@ -77,17 +76,5 @@ class User extends Authenticatable implements JWTSubject
     public function scopeFilter(Builder $builder): Builder
     {
         return (new UserFilter)->apply($builder);
-    }
-
-    public function getJWTIdentifier(): mixed
-    {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims(): array
-    {
-        return [
-            'ctx' => 'user',
-        ];
     }
 }

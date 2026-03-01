@@ -3,10 +3,9 @@
 namespace NinjaPortal\Portal\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
 
-class Admin extends Authenticatable implements JWTSubject
+class Admin extends Authenticatable
 {
     use HasRoles;
 
@@ -26,17 +25,5 @@ class Admin extends Authenticatable implements JWTSubject
     protected function getDefaultGuardName(): string
     {
         return $this->guardName();
-    }
-
-    public function getJWTIdentifier(): mixed
-    {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims(): array
-    {
-        return [
-            'ctx' => 'admin',
-        ];
     }
 }

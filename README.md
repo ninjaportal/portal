@@ -10,6 +10,9 @@ It provides:
 - Apigee-backed developer app + credential services
 - Core events/policies/RBAC seeding
 
+`ninjaportal/portal` intentionally keeps API authentication concerns out of the core
+package. JWT-aware user/admin models are provided by `ninjaportal/portal-api`.
+
 ## Install
 
 From the Laravel app (backend):
