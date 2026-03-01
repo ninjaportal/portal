@@ -16,11 +16,10 @@ class UserFilter extends FilterAbstract
     protected function filterStatus(Builder $builder, mixed $value): void
     {
         $status = strtolower(trim((string) $value));
-        if ($status === '' || ! in_array($status, array_values(User::$USER_STATUS), true)) {
+        if ($status === '' || ! in_array($status, User::statuses(), true)) {
             return;
         }
 
         $builder->where('status', $status);
     }
 }
-

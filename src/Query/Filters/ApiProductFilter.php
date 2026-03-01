@@ -15,11 +15,10 @@ class ApiProductFilter extends FilterAbstract
     protected function filterVisibility(Builder $builder, mixed $value): void
     {
         $visibility = strtolower(trim((string) $value));
-        if ($visibility === '' || ! array_key_exists($visibility, ApiProduct::$VISIBILITY)) {
+        if ($visibility === '' || ! in_array($visibility, ApiProduct::visibilities(), true)) {
             return;
         }
 
         $builder->where('visibility', $visibility);
     }
 }
-

@@ -55,4 +55,18 @@ class PortalServiceProviderTest extends TestCase
         $this->assertFalse(method_exists(new \NinjaPortal\Portal\Models\Admin, 'getJWTIdentifier'));
         $this->assertFalse(method_exists(new \NinjaPortal\Portal\Models\Admin, 'getJWTCustomClaims'));
     }
+
+    public function test_user_and_api_product_defaults_can_be_resolved_from_config(): void
+    {
+        config()->set('ninjaportal.user.statuses', ['draft', 'active', 'inactive']);
+        config()->set('ninjaportal.user.default_status', 'draft');
+        config()->set('ninjaportal.api_products.default_visibility', 'private');
+        config()->set('ninjaportal.api_products.storage_disk', 's3');
+
+        $this->assertSame(['draft', 'active', 'inactive'], \NinjaPortal\Portal\Models\User::statuses());
+        $this->assertSame('draft', \NinjaPortal\Portal\Models\User::defaultStatus());
+        $this->assertSame('active', \NinjaPortal\Portal\Models\User::activeStatus());
+        $this->assertSame('private', \NinjaPortal\Portal\Models\ApiProduct::defaultVisibility());
+        $this->assertSame('s3', \NinjaPortal\Portal\Models\ApiProduct::storageDisk());
+    }
 }

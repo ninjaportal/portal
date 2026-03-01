@@ -28,7 +28,7 @@ class UserService extends BaseService implements UserServiceInterface
     protected function mutateDataBeforeCreate(array $data): array
     {
         if (! array_key_exists('status', $data) || $data['status'] === null || $data['status'] === '') {
-            $data['status'] = User::$DEFAULT_STATUS;
+            $data['status'] = User::defaultStatus();
         }
 
         return $data;

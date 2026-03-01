@@ -13,17 +13,6 @@ class ApiProduct extends Model
 {
     use HasTranslations;
 
-    /**
-     * used for storing the swagger file in the storage
-     */
-    public static string $STORAGE_DISK = 'public';
-
-    public static array $VISIBILITY = [
-        'public' => 'public',
-        'private' => 'private',
-        'draft' => 'draft',
-    ];
-
     protected $fillable = [
         'slug',
         'swagger_url',
@@ -59,5 +48,30 @@ class ApiProduct extends Model
     public function scopeFilter(Builder $builder): Builder
     {
         return (new ApiProductFilter)->apply($builder);
+    }
+
+    public static function visibilities(): array
+    {
+        return [
+            'public',
+            'private',
+            'draft',
+        ];
+    }
+
+    public static function defaultVisibility(): string
+    {
+        $configured = strtolower(trim((string) config('ninjaportal.api_products.default_visibility', 'public')));
+
+        return in_array($configured, static::visibilities(), true)
+            ? $configured
+            : 'public';
+    }
+
+    public static function storageDisk(): string
+    {
+        $disk = trim((string) config('ninjaportal.api_products.storage_disk', 'public'));
+
+        return $disk !== '' ? $disk : 'public';
     }
 }

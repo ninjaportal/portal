@@ -30,9 +30,9 @@ return new class extends Migration
                 $table->string('password');
 
             if (! Schema::hasColumn('users', 'status'))
-                $table->string('status')->default(User::$ACTIVE_STATUS);
+                $table->string('status')->default(config('ninjaportal.user.default_status', User::defaultStatus()));
 
-            if (! Schema::hasColumn('users', 'role'))
+            if (! Schema::hasColumn('users', 'sync_with_apigee'))
                 $table->boolean('sync_with_apigee')->default(false);
 
             if (! Schema::hasColumn('users', 'custom_attributes'))
