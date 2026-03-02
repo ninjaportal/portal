@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('apigee_product_id')->index();
             $table->string('swagger_url')->nullable();
-            $table->string('visibility')->default('public');
+            $table->string('visibility')->default(config('ninjaportal.api_products.default_visibility', \NinjaPortal\Portal\Models\ApiProduct::defaultVisibility()));
             $table->timestamps();
         });
     }

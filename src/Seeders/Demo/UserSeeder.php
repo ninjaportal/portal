@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Summers',
                 'email' => 'jade.summers@ninjaportal.test',
                 'password' => 'password',
-                'status' => PortalUser::$ACTIVE_STATUS,
+                'status' => PortalUser::activeStatus(),
                 'email_verified_at' => now(),
                 'sync_with_apigee' => false,
                 'custom_attributes' => [
@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Diaz',
                 'email' => 'marco.diaz@ninjaportal.test',
                 'password' => 'password',
-                'status' => PortalUser::$ACTIVE_STATUS,
+                'status' => PortalUser::activeStatus(),
                 'email_verified_at' => now()->subDay(),
                 'sync_with_apigee' => true,
                 'custom_attributes' => [
@@ -44,7 +44,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Nair',
                 'email' => 'priya.nair@ninjaportal.test',
                 'password' => 'password',
-                'status' => PortalUser::$DEFAULT_STATUS,
+                'status' => PortalUser::defaultStatus(),
                 'sync_with_apigee' => false,
                 'custom_attributes' => [
                     'company' => 'Ninja Portal',

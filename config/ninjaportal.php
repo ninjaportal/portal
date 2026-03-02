@@ -46,6 +46,20 @@ return [
         ],
     ],
 
+    'user' => [
+        'statuses' => [
+            'active',
+            'inactive',
+            'pending',
+        ],
+        'default_status' => env('NINJAPORTAL_USER_DEFAULT_STATUS', 'pending'),
+    ],
+
+    'api_products' => [
+        'default_visibility' => env('NINJAPORTAL_API_PRODUCT_DEFAULT_VISIBILITY', 'public'),
+        'storage_disk' => env('NINJAPORTAL_API_PRODUCT_STORAGE_DISK', 'public'),
+    ],
+
     'models' => [
         'Admin' => \NinjaPortal\Portal\Models\Admin::class,
         'ApiProduct' => \NinjaPortal\Portal\Models\ApiProduct::class,

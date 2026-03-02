@@ -16,7 +16,7 @@ class ApiProductSeeder extends Seeder
                 'slug' => 'payments-suite',
                 'swagger_url' => 'https://specs.ninjaportal.test/payments-suite.yaml',
                 'apigee_product_id' => 'payments-suite',
-                'visibility' => ApiProduct::$VISIBILITY['public'],
+                'visibility' => 'public',
                 'categories' => ['payments'],
                 'audiences' => ['Retail Developers', 'Partner Integrators'],
                 'ar' => [
@@ -36,7 +36,7 @@ class ApiProductSeeder extends Seeder
                 'slug' => 'usage-analytics',
                 'swagger_url' => 'https://specs.ninjaportal.test/usage-analytics.yaml',
                 'apigee_product_id' => 'usage-analytics',
-                'visibility' => ApiProduct::$VISIBILITY['public'],
+                'visibility' => ApiProduct::defaultVisibility(),
                 'categories' => ['analytics'],
                 'audiences' => ['Retail Developers', 'Internal Teams'],
                 'ar' => [
@@ -56,7 +56,7 @@ class ApiProductSeeder extends Seeder
                 'slug' => 'kyc-compliance',
                 'swagger_url' => 'https://specs.ninjaportal.test/kyc-compliance.yaml',
                 'apigee_product_id' => 'kyc-compliance',
-                'visibility' => ApiProduct::$VISIBILITY['private'],
+                'visibility' => 'private',
                 'categories' => ['compliance', 'analytics'],
                 'audiences' => ['Partner Integrators'],
 

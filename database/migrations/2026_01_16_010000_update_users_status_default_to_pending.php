@@ -14,7 +14,7 @@ return new class extends Migration
         }
 
         // Avoid Schema::change() (requires doctrine/dbal). Use raw SQL instead.
-        DB::statement("ALTER TABLE `users` MODIFY `status` VARCHAR(255) NOT NULL DEFAULT '".User::$DEFAULT_STATUS."'");
+        DB::statement("ALTER TABLE `users` MODIFY `status` VARCHAR(255) NOT NULL DEFAULT '".config('ninjaportal.user.default_status', User::defaultStatus())."'");
     }
 
     public function down(): void
@@ -23,7 +23,7 @@ return new class extends Migration
             return;
         }
 
-        DB::statement("ALTER TABLE `users` MODIFY `status` VARCHAR(255) NOT NULL DEFAULT '".User::$ACTIVE_STATUS."'");
+        DB::statement("ALTER TABLE `users` MODIFY `status` VARCHAR(255) NOT NULL DEFAULT '".User::activeStatus()."'");
     }
 };
 

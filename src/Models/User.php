@@ -14,18 +14,6 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    public static string $ACTIVE_STATUS = 'active';
-
-    public static string $INACTIVE_STATUS = 'inactive';
-
-    public static string $DEFAULT_STATUS = 'pending';
-
-    public static array $USER_STATUS = [
-        'active' => 'active',
-        'inactive' => 'inactive',
-        'pending' => 'pending',
-    ];
-
     protected $fillable = [
         'first_name',
         'last_name',
@@ -76,5 +64,37 @@ class User extends Authenticatable
     public function scopeFilter(Builder $builder): Builder
     {
         return (new UserFilter)->apply($builder);
+    }
+
+    public static function statuses(): array
+    {
+        $statuses = config('ninjaportal.user.statuses', ['active', 'inactive', 'pending']);
+
+        return array_values(array_filter(array_map(
+            static fn (mixed $status): string => strtolower(trim((string) $status)),
+            is_array($statuses) ? $statuses : []
+        )));
+    }
+
+    public static function defaultStatus(): string
+    {
+        $configured = strtolower(trim((string) config('ninjaportal.user.default_status', 'pending')));
+        $statuses = static::statuses();
+
+        if ($configured !== '' && in_array($configured, $statuses, true)) {
+            return $configured;
+        }
+
+        return $statuses[0] ?? 'pending';
+    }
+
+    public static function activeStatus(): string
+    {
+        return in_array('active', static::statuses(), true) ? 'active' : static::defaultStatus();
+    }
+
+    public static function inactiveStatus(): string
+    {
+        return in_array('inactive', static::statuses(), true) ? 'inactive' : static::defaultStatus();
     }
 }
