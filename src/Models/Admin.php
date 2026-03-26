@@ -4,13 +4,14 @@ namespace NinjaPortal\Portal\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use NinjaPortal\Portal\Query\Filters\AdminFilter;
 use NinjaPortal\Portal\Query\Search\AdminSearch;
 use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends Authenticatable
 {
-    use HasRoles;
+    use HasRoles, Notifiable;
 
     protected string $guard_name = 'admin';
 
