@@ -2,8 +2,11 @@
 
 namespace NinjaPortal\Portal\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use NinjaPortal\Portal\Query\Filters\SettingFilter;
+use NinjaPortal\Portal\Query\Search\SettingSearch;
 
 class Setting extends Model
 {
@@ -30,6 +33,16 @@ class Setting extends Model
 
     public function group(): BelongsTo
     {
-        return $this->belongsTo(SettingGroup::class,'setting_group_id');
+        return $this->belongsTo(SettingGroup::class, 'setting_group_id');
+    }
+
+    public function scopeSearch(Builder $builder): Builder
+    {
+        return (new SettingSearch)->apply($builder);
+    }
+
+    public function scopeFilter(Builder $builder): Builder
+    {
+        return (new SettingFilter)->apply($builder);
     }
 }

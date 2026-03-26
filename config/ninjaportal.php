@@ -60,6 +60,10 @@ return [
         'storage_disk' => env('NINJAPORTAL_API_PRODUCT_STORAGE_DISK', 'public'),
     ],
 
+    'dashboard' => [
+        'apigee_summary_ttl_seconds' => env('NINJAPORTAL_DASHBOARD_APIGEE_SUMMARY_TTL', 60),
+    ],
+
     'models' => [
         'Admin' => \NinjaPortal\Portal\Models\Admin::class,
         'ApiProduct' => \NinjaPortal\Portal\Models\ApiProduct::class,

@@ -18,6 +18,7 @@ use NinjaPortal\Portal\Contracts\Repositories\RoleRepositoryInterface;
 use NinjaPortal\Portal\Contracts\Repositories\SettingGroupRepositoryInterface;
 use NinjaPortal\Portal\Contracts\Repositories\SettingRepositoryInterface;
 use NinjaPortal\Portal\Contracts\Repositories\UserRepositoryInterface;
+use NinjaPortal\Portal\Contracts\Services\AdminDashboardServiceInterface;
 use NinjaPortal\Portal\Contracts\Services\AdminServiceInterface;
 use NinjaPortal\Portal\Contracts\Services\ApiProductServiceInterface;
 use NinjaPortal\Portal\Contracts\Services\AppServiceInterface;
@@ -58,6 +59,7 @@ use NinjaPortal\Portal\Repositories\SettingGroupRepository;
 use NinjaPortal\Portal\Repositories\SettingRepository;
 use NinjaPortal\Portal\Repositories\UserRepository;
 use NinjaPortal\Portal\Services\AdminService;
+use NinjaPortal\Portal\Services\AdminDashboardService;
 use NinjaPortal\Portal\Services\ApiProductService;
 use NinjaPortal\Portal\Services\AudienceService;
 use NinjaPortal\Portal\Services\CategoryService;
@@ -119,6 +121,7 @@ class PortalServiceProvider extends PackageServiceProvider
     }
 
     protected array $serviceBindings = [
+        AdminDashboardServiceInterface::class => AdminDashboardService::class,
         ApiProductServiceInterface::class => ApiProductService::class,
         AudienceServiceInterface::class => AudienceService::class,
         CategoryServiceInterface::class => CategoryService::class,
